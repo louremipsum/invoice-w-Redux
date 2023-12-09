@@ -18,8 +18,8 @@ const router = createBrowserRouter([
     element: <AddInvoice />,
   },
   {
-    path: "/contact",
-    element: <div>Contact page</div>,
+    path: "/edit",
+    element: <div>Edit page</div>,
   },
 ]);
 
