@@ -8,6 +8,9 @@ import Modal from "react-bootstrap/Modal";
 import { BiPaperPlane, BiCloudDownload } from "react-icons/bi";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { connect } from "react-redux";
+import { addItem } from "../features/invoices/invoiceSlice";
+import { v4 as uuidv4 } from "uuid";
 
 function GenerateInvoice() {
   html2canvas(document.querySelector("#invoiceCapture")).then((canvas) => {
@@ -30,6 +33,13 @@ class InvoiceModal extends React.Component {
   constructor(props) {
     super(props);
   }
+
+  handleSaveInvoice = () => {
+    console.log("handleSaveInvoice run-> ", this.props.info);
+    this.props.info.UID = uuidv4();
+    this.props.addItem(this.props.info); // Dispatch the addItem action with the current state as its payload
+  };
+
   render() {
     return (
       <div>
@@ -166,13 +176,13 @@ class InvoiceModal extends React.Component {
                 <Button
                   variant="primary"
                   className="d-block w-100"
-                  onClick={GenerateInvoice}
+                  onClick={this.handleSaveInvoice}
                 >
                   <BiPaperPlane
                     style={{ width: "15px", height: "15px", marginTop: "-3px" }}
                     className="me-2"
                   />
-                  Send Invoice
+                  Save Invoice
                 </Button>
               </Col>
               <Col md={6}>
@@ -197,4 +207,18 @@ class InvoiceModal extends React.Component {
   }
 }
 
-export default InvoiceModal;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addItem: (invoice) => dispatch(addItem(invoice)),
+  };
+};
+
+const mapStateToProps = (state) => {
+  return {
+    invoiceList: state.invoices.invoiceList,
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(InvoiceModal);
+
+// export default InvoiceModal;
