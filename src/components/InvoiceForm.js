@@ -16,6 +16,7 @@ class InvoiceForm extends React.Component {
       isOpen: false,
       currency: "$",
       currentDate: "",
+      UID: 0,
       invoiceNumber: 1,
       dateOfIssue: "",
       billTo: "",
