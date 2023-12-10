@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { IconPlus } from "@tabler/icons-react";
+import { BiPlus } from "react-icons/bi";
 import { Navbar, Container, Nav } from "react-bootstrap";
 
 const NavigationBar = () => {
@@ -30,7 +30,7 @@ const NavigationBar = () => {
               View Invoices
             </Link>
             <Link to="/create" type="button" className="btn btn-primary ">
-              Create Invoice <IconPlus />
+              Create Invoice <BiPlus />
             </Link>
           </Nav>
         </Navbar.Collapse>
