@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AddInvoice from "./routes/AddInvoice";
 import ViewInvoice from "./routes/ViewInvoice";
+import Edit from "./routes/Edit";
 
 const router = createBrowserRouter([
   {
@@ -19,7 +20,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/edit",
-    element: <div>Edit page</div>,
+    element: <Edit />,
   },
 ]);
 
