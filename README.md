@@ -19,7 +19,7 @@ An Invoice Manager project built with React + Bootstrap + React-redux toolkit. C
 
 ## Live Demo
 
-//url to be made
+`https://invoice-w-redux.vercel.app/`
 
 ### Screenshots
 
