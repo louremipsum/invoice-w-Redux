@@ -1,33 +1,14 @@
-import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import React from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import Modal from "react-bootstrap/Modal";
+import GenerateInvoice from "../function/GenerateInvoice";
 import { BiPaperPlane, BiCloudDownload } from "react-icons/bi";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
 import { connect } from "react-redux";
 import { addItem } from "../features/invoices/invoiceSlice";
-import { v4 as uuidv4 } from "uuid";
-
-function GenerateInvoice() {
-  html2canvas(document.querySelector("#invoiceCapture")).then((canvas) => {
-    const imgData = canvas.toDataURL("image/png", 1.0);
-    const pdf = new jsPDF({
-      orientation: "portrait",
-      unit: "pt",
-      format: [612, 792],
-    });
-    pdf.internal.scaleFactor = 1;
-    const imgProps = pdf.getImageProperties(imgData);
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-    pdf.save("invoice-001.pdf");
-  });
-}
 
 class InvoiceModal extends React.Component {
   constructor(props) {
@@ -35,9 +16,8 @@ class InvoiceModal extends React.Component {
   }
 
   handleSaveInvoice = () => {
-    console.log("handleSaveInvoice run-> ", this.props.info);
-    this.props.info.UID = uuidv4();
     this.props.addItem(this.props.info); // Dispatch the addItem action with the current state as its payload
+    this.props.resetForm(); // Reset the form fields
   };
 
   render() {
@@ -189,7 +169,7 @@ class InvoiceModal extends React.Component {
                 <Button
                   variant="outline-primary"
                   className="d-block w-100 mt-3 mt-md-0"
-                  onClick={GenerateInvoice}
+                  onClick={() => GenerateInvoice(this.props.info.invoiceNumber)}
                 >
                   <BiCloudDownload
                     style={{ width: "16px", height: "16px", marginTop: "-3px" }}
@@ -207,18 +187,27 @@ class InvoiceModal extends React.Component {
   }
 }
 
+/**
+ * Maps dispatch functions to props.
+ * @param {function} dispatch - The dispatch function.
+ * @returns {object} An object containing the mapped dispatch functions.
+ */
 const mapDispatchToProps = (dispatch) => {
   return {
     addItem: (invoice) => dispatch(addItem(invoice)),
   };
 };
 
+/**
+ * Maps the state to the props of the component.
+ * @param {Object} state - The Redux state object.
+ * @returns {Object} - The mapped props object.
+ */
 const mapStateToProps = (state) => {
   return {
     invoiceList: state.invoices.invoiceList,
   };
 };
 
+// Connects the component to the Redux store.
 export default connect(mapStateToProps, mapDispatchToProps)(InvoiceModal);
-
-// export default InvoiceModal;
