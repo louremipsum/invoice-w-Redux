@@ -3,6 +3,10 @@ import { Container, Row, Col } from "react-bootstrap";
 import NavigationBar from "../components/NavigationBar";
 import InvoiceForm from "../components/InvoiceForm";
 
+/**
+ * Renders the AddInvoice component.
+ * @returns {JSX.Element} The rendered AddInvoice component.
+ */
 const AddInvoice = () => {
   return (
     <div>
