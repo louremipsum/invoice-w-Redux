@@ -1,5 +1,9 @@
 import React from "react";
 
+/**
+ * Renders a component to display when no invoices are found.
+ * @returns {JSX.Element} The NoInvoices component.
+ */
 const NoInvoices = () => {
   return (
     <div
@@ -20,7 +24,9 @@ const NoInvoices = () => {
 
       <h1>No Invoices Found</h1>
       <p className="text-body-secondary">
-        There are no invoices to display at the moment.
+        There are no invoices to display at the moment. Click{" "}
+        <span style={{ fontWeight: 500 }}>Create Invoice </span>
+        button to get started!
       </p>
     </div>
   );
