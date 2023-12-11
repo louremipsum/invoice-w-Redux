@@ -16,6 +16,7 @@ An Invoice Manager project built with React + Bootstrap + React-redux toolkit. C
 * Copy the details of an existing invoice using copy icon.
 * Delete an Invoice. A confirmation dialog box will be shown.
 * Download an Invoice in PDF format with dynamically generated name using invoice number.
+* The Invoices are saved into LocalStorage so you can close and open the website but invoices will still be there.
 
 ## Live Demo
 
