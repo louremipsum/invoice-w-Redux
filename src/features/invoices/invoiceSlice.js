@@ -1,10 +1,53 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
 
 // The initial state of the invoices slice
 const initialState = {
   invoiceList: [],
 };
+
+/**
+ * Adds an item to the invoices list asynchronously.
+ * On successful addition, a toast is shown.
+ * @param {Object} newItem - The new item to be added.
+ * @param {Object} options - The options object containing getState and dispatch functions.
+ * @returns {Promise} A promise that resolves when the item is added.
+ */
+export const addItem = createAsyncThunk(
+  "invoices/addItem",
+  async (newItem, { getState, dispatch }) => {
+    const { invoiceList } = getState().invoices;
+    // Check if the item is valid(not null, undefined, "" empty string) and not a duplicate
+    if (!newItem || invoiceList.find((item) => item.UID === newItem.UID)) {
+      toast.error("Invoice not saved. Duplicate or invalid item.");
+      return;
+    }
+    dispatch(invoiceSlice.actions.addItem(newItem));
+    toast.success("Invoice saved successfully");
+  }
+);
+
+/**
+ * Removes an item from the invoices list asynchronously.
+ * On successful removal, a toast is shown.
+ * @param {string} itemId - The ID of the item to be removed.
+ * @param {object} options - The options object containing getState and dispatch functions.
+ * @returns {Promise<void>} A promise that resolves when the item is removed.
+ */
+export const removeItem = createAsyncThunk(
+  "invoices/removeItem",
+  async (itemId, { getState, dispatch }) => {
+    const { invoiceList } = getState().invoices;
+    // Checks if the item to be removed actually exists in the list
+    if (!invoiceList.find((item) => item.UID === itemId)) {
+      toast.error("Invoice not deleted. Invalid ID.");
+      return;
+    }
+    dispatch(invoiceSlice.actions.removeItem(itemId));
+    toast.success("Invoice deleted successfully");
+  }
+);
 
 /**
  * Represents a slice of the invoice state.
@@ -21,30 +64,24 @@ const invoiceSlice = createSlice({
   initialState,
   reducers: {
     removeItem: (state, action) => {
+      // The payload is the item UID
       const itemId = action.payload;
-
-      // Remove the item from the invoice list by filtering it out
+      // Remove the item from the list using filter by UID
       state.invoiceList = state.invoiceList.filter(
         (item) => item.UID !== itemId
       );
-      toast.success("Invoice deleted successfully");
     },
     addItem: (state, action) => {
-      const newItem = action.payload; // object of the current state of the invoice when the user clicks the Save button
-      // Remove the old item
-      const updatedInvoiceList = state.invoiceList.filter(
+      // The payload is the new item
+      const newItem = action.payload;
+      // Remove the item from the list using filter by UID, which will work both in case of edit and add
+      state.invoiceList = state.invoiceList.filter(
         (item) => item.UID !== newItem.UID
       );
-      // Push the new item
-      updatedInvoiceList.push(newItem);
-      // Update the invoice list
-      state.invoiceList = updatedInvoiceList;
-      toast.success("Invoice saved successfully");
+      // Pushing the new Item
+      state.invoiceList.push(newItem);
     },
   },
 });
-
-// Export the reducer and the actions
-export const { removeItem, addItem } = invoiceSlice.actions;
 
 export default invoiceSlice.reducer;
