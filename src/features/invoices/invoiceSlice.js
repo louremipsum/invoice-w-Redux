@@ -29,6 +29,25 @@ export const addItem = createAsyncThunk(
 );
 
 /**
+ * Edits an item in the invoices.
+ *
+ * @param {Object} updatedItem - The updated item to be edited.
+ * @param {Object} dispatch - The Redux dispatch function.
+ * @returns {Promise<void>} - A promise that resolves when the item is edited successfully.
+ */
+export const editItem = createAsyncThunk(
+  "invoices/editItem",
+  async (updatedItem, { dispatch }) => {
+    if (!updatedItem) {
+      toast.error("Invoice not updated. Invalid item.");
+      return;
+    }
+    dispatch(invoiceSlice.actions.editItem(updatedItem));
+    toast.success("Invoice updated successfully");
+  }
+);
+
+/**
  * Removes an item from the invoices list asynchronously.
  * On successful removal, a toast is shown.
  * @param {string} itemId - The ID of the item to be removed.
@@ -74,12 +93,22 @@ const invoiceSlice = createSlice({
     addItem: (state, action) => {
       // The payload is the new item
       const newItem = action.payload;
-      // Remove the item from the list using filter by UID, which will work both in case of edit and add
-      state.invoiceList = state.invoiceList.filter(
-        (item) => item.UID !== newItem.UID
-      );
+      // state.invoiceList = state.invoiceList.filter(
+      //   (item) => item.UID !== newItem.UID
+      // );
+
       // Pushing the new Item
       state.invoiceList.push(newItem);
+    },
+    editItem: (state, action) => {
+      // The payload is the updated item
+      const updatedItem = action.payload;
+      // Remove the item from the list using filter by UID, which will work both in case of edit and add
+      state.invoiceList = state.invoiceList.filter(
+        (item) => item.UID !== updatedItem.UID
+      );
+      // Pushing the updated Item
+      state.invoiceList.push(updatedItem);
     },
   },
 });
