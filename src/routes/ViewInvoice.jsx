@@ -1,20 +1,17 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Card, Button, Col, Row, Modal, Container } from "react-bootstrap";
 import NavigationBar from "../components/NavigationBar";
 import NoInvoices from "../components/NoInvoices";
+import ShowInvoice from "../components/ShowInvoice";
+import { addItem } from "../features/invoices/invoiceSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { Card, Button, Col, Row, Modal, Container } from "react-bootstrap";
 import { MdDelete } from "react-icons/md";
 import { removeItem } from "../features/invoices/invoiceSlice";
 import { BiShow } from "react-icons/bi";
-import ShowInvoice from "../components/ShowInvoice";
 import { HiOutlineDuplicate } from "react-icons/hi";
-import { useNavigate } from "react-router-dom";
 import { v4 as uuidV4 } from "uuid";
 
 const ViewInvoice = () => {
-  // Used useNavigate hook to navigate to edit page with props
-  const navigate = useNavigate();
-
   // Used useSelector hook to get the invoiceList from the store
   const { invoiceList } = useSelector((state) => state.invoices);
 
@@ -56,7 +53,8 @@ const ViewInvoice = () => {
     const originalInvoice = invoiceList.find((item) => item.UID === itemID);
     const copiedInvoice = { ...originalInvoice, UID: uuidV4() }; // create a copy of the invoice with a new UID
     setCurrentOpenInvoice(copiedInvoice);
-    navigate("/edit", { state: { info: copiedInvoice, edit: true } });
+    // navigate("/edit", { state: { info: copiedInvoice, edit: true } });
+    dispatch(addItem(copiedInvoice));
   };
 
   /**
