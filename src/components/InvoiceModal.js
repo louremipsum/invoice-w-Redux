@@ -6,9 +6,10 @@ import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import Modal from "react-bootstrap/Modal";
 import GenerateInvoice from "../function/GenerateInvoice";
-import { BiPaperPlane, BiCloudDownload } from "react-icons/bi";
+import toast, { Toaster } from "react-hot-toast";
+import { BiSave, BiCloudDownload } from "react-icons/bi";
 import { connect } from "react-redux";
-import { addItem } from "../features/invoices/invoiceSlice";
+import { addItem, editItem } from "../features/invoices/invoiceSlice";
 
 class InvoiceModal extends React.Component {
   constructor(props) {
@@ -16,13 +17,21 @@ class InvoiceModal extends React.Component {
   }
 
   handleSaveInvoice = () => {
-    this.props.addItem(this.props.info); // Dispatch the addItem action with the current state as its payload
+    if (this.props.action === "edit") {
+      this.props.editItem(this.props.info); // Dispatch the addItem action with the current state as its payload
+    } else if (this.props.action === "add") {
+      this.props.addItem(this.props.info); // Dispatch the addItem action with the current state as its payload
+    } else {
+      toast.error("Invalid Action");
+    }
     this.props.resetForm(); // Reset the form fields
   };
 
   render() {
     return (
       <div>
+        <Toaster />
+
         <Modal
           show={this.props.showModal}
           onHide={this.props.closeModal}
@@ -158,7 +167,7 @@ class InvoiceModal extends React.Component {
                   className="d-block w-100"
                   onClick={this.handleSaveInvoice}
                 >
-                  <BiPaperPlane
+                  <BiSave
                     style={{ width: "15px", height: "15px", marginTop: "-3px" }}
                     className="me-2"
                   />
@@ -195,6 +204,7 @@ class InvoiceModal extends React.Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     addItem: (invoice) => dispatch(addItem(invoice)),
+    editItem: (invoice) => dispatch(editItem(invoice)),
   };
 };
 
