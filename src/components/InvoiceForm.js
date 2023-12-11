@@ -8,7 +8,7 @@ import Card from "react-bootstrap/Card";
 import InvoiceItem from "./InvoiceItem";
 import InvoiceModal from "./InvoiceModal";
 import InputGroup from "react-bootstrap/InputGroup";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { v4 as uuidv4 } from "uuid";
 
 class InvoiceForm extends React.Component {
@@ -170,11 +170,23 @@ class InvoiceForm extends React.Component {
       ],
     });
   };
+  handleReviewInvoice = (event) => {
+    // Check if items is not empty
+    if (this.state.items && this.state.items.length > 0) {
+      this.openModal(event);
+    } else {
+      // Prevent the default action
+      event.preventDefault();
+      // Show an error message
+      toast.error("Please add at least one item to the invoice.");
+    }
+  };
+
   render() {
     return (
       <>
         <Toaster />
-        <Form onSubmit={this.openModal}>
+        <Form onSubmit={this.handleReviewInvoice}>
           <Row>
             <Col md={8} lg={9}>
               <Card className="p-4 p-xl-5 my-3 my-xl-4">
@@ -381,6 +393,7 @@ class InvoiceForm extends React.Component {
                   discountAmmount={this.state.discountAmmount}
                   total={this.state.total}
                   resetForm={this.resetForm}
+                  action="add"
                 />
                 <Form.Group className="mb-3">
                   <Form.Label className="fw-bold">Currency:</Form.Label>
